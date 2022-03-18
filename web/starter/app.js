@@ -5,7 +5,11 @@ var uiController = (function(){
         inputValue: ".add__value",
         addBtn: ".add__btn",
         incomeList: ".income__list",
-        expenseList: ".expenses__list"
+        expenseList: ".expenses__list",
+        tusuvLabel: ".budget__value",
+        incomeLabel: ".budget__income--value",
+        expeseLabel: ".budget__expenses--value",
+        percentageLabel: ".budget__expenses--percentage"
     }
     return{
         getInput: function(){
@@ -39,6 +43,18 @@ var uiController = (function(){
             //enter darsnii daraa cursor 0-dugaar index aguulj bui(tailbar) heseg deer ochino
             fieldsArr[0].focus();
         },
+
+        tusviigUzuuleh: function(ftusuv){
+            document.querySelector(DOMstrings.tusuvLabel).textContent = ftusuv.tusuv;
+            document.querySelector(DOMstrings.incomeLabel).textContent = "+"+ftusuv.totalInc;
+            document.querySelector(DOMstrings.expeseLabel).textContent = "-"+ftusuv.totalExp;
+            if(ftusuv.huvi === 0){
+                document.querySelector(DOMstrings.percentageLabel).textContent = ftusuv.huvi;
+            }else{
+                document.querySelector(DOMstrings.percentageLabel).textContent = ftusuv.huvi+"%";
+            }
+        },
+
         addListItem: function(item, type){
             var html,list;
             if(type === 'inc'){
@@ -150,7 +166,8 @@ var appController = (function(uiController, financeController){
         //Etssiin vldegdel
         var tusuv = financeController.tusviigAvah();
 
-        console.log(tusuv);
+        //Tusuviig vzvvleh
+        uiController.tusviigUzuuleh(tusuv);
     };
  var serupEventListeners = function(){  
     var DOM = uiController.getDOMstrings();
