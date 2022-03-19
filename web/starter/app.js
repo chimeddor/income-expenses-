@@ -105,6 +105,7 @@ var financeController = (function() {
     };
   
     return {
+      
         tusuvTootsooloh: function(){
             //niit orlogiin niilberiig tootsoolno
             calculateTotal('inc');
@@ -124,9 +125,22 @@ var financeController = (function() {
                 huvi: data.huvi,
                 totalInc: data.totals.inc,
                 totalExp: data.totals.exp
+                
             }
         },
       
+        deleteItem: function(type, id) {
+            var ids = data.items[type].map(function(e){
+                return e.id;
+            });
+
+            var index = ids.indexof(id);
+            console.log('index: '+index);
+            if(index !== -1){
+                console.log("ustgah gej baina");
+                data.items[type].splice(index, 1);
+            }
+        },
         addItem: function(type, description, value) {
             var item, id;
             if(data.items[type].length === 0) {
@@ -142,21 +156,7 @@ var financeController = (function() {
             }
             data.items[type].push(item);
             return item;
-        },
-        deleteItem: function(type, id) {
-            console.log("id "+id);
-            console.log(type); 
-            var ids = data.items[type].forEach(function(element){
-                console.log('ids: '+ids);
-                return element.id;
-            });
-            var index = ids.indexof(id);
-            console.log('index: '+index);
-            if(index !== -1){
-                console.log("ustgah gej baina");
-                data.items[type].splice(index,1);
-            }
-        },
+        }, 
         seeData: function (){
             return data;
         }
@@ -198,13 +198,14 @@ var appController = (function(uiController, financeController){
 
     document.querySelector(DOM.containerDev).addEventListener("click",function(event){
         var id = event.target.parentNode.parentNode.parentNode.parentNode.id;
+        console.log("id "+ id);
         if(id){
             var arr = id.split("-");
             var type = arr[0];
             var itemId = parseInt(arr[1]);
             // console.log('itemType: '+ itemType + ' itemId: ' + itemId );
             financeController.deleteItem(type, itemId);
-        }
+        };
      });
 
 }
