@@ -9,7 +9,8 @@ var uiController = (function(){
         tusuvLabel: ".budget__value",
         incomeLabel: ".budget__income--value",
         expeseLabel: ".budget__expenses--value",
-        percentageLabel: ".budget__expenses--percentage"
+        percentageLabel: ".budget__expenses--percentage",
+        containerDev: ".container"
     }
     return{
         getInput: function(){
@@ -104,25 +105,6 @@ var financeController = (function() {
     };
   
     return {
-        addItem: function(type, description, value) {
-            var item, id;
-            if(data.items[type].length === 0) {
-                id = 1;
-            }
-            else{
-                id = data.items[type][data.items[type].length - 1].id + 1;
-            }
-            if(type === "inc"){
-                item = new Income(id,description,value);
-            }else{
-                item = new Exponse(id,description,value);
-            }
-            data.items[type].push(item);
-            return item;
-        },
-        seeData: function (){
-            return data;
-        },
         tusuvTootsooloh: function(){
             //niit orlogiin niilberiig tootsoolno
             calculateTotal('inc');
@@ -143,6 +125,40 @@ var financeController = (function() {
                 totalInc: data.totals.inc,
                 totalExp: data.totals.exp
             }
+        },
+      
+        addItem: function(type, description, value) {
+            var item, id;
+            if(data.items[type].length === 0) {
+                id = 1;
+            }
+            else{
+                id = data.items[type][data.items[type].length - 1].id + 1;
+            }
+            if(type === "inc"){
+                item = new Income(id,description,value);
+            }else{
+                item = new Exponse(id,description,value);
+            }
+            data.items[type].push(item);
+            return item;
+        },
+        deleteItem: function(type, id) {
+            console.log("id "+id);
+            console.log(type); 
+            var ids = data.items[type].forEach(function(element){
+                console.log('ids: '+ids);
+                return element.id;
+            });
+            var index = ids.indexof(id);
+            console.log('index: '+index);
+            if(index !== -1){
+                console.log("ustgah gej baina");
+                data.items[type].splice(index,1);
+            }
+        },
+        seeData: function (){
+            return data;
         }
     };
 })();
@@ -179,6 +195,18 @@ var appController = (function(uiController, financeController){
             ctrlAddItem();
         }
     });
+
+    document.querySelector(DOM.containerDev).addEventListener("click",function(event){
+        var id = event.target.parentNode.parentNode.parentNode.parentNode.id;
+        if(id){
+            var arr = id.split("-");
+            var type = arr[0];
+            var itemId = parseInt(arr[1]);
+            // console.log('itemType: '+ itemType + ' itemId: ' + itemId );
+            financeController.deleteItem(type, itemId);
+        }
+     });
+
 }
 return {
     init: function(){
