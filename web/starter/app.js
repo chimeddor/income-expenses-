@@ -1,7 +1,7 @@
 var uiController = (function(){
-    var DOMstrings={
+    var DOMstrings = {
         inputType: ".add__type",
-        inputDesciption: ".add__description",
+        inputDescription: ".add__description",
         inputValue: ".add__value",
         addBtn: ".add__btn",
         incomeList: ".income__list",
@@ -11,64 +11,71 @@ var uiController = (function(){
         expeseLabel: ".budget__expenses--value",
         percentageLabel: ".budget__expenses--percentage",
         containerDev: ".container"
-    }
-    return{
-        getInput: function(){
-            return {
-                type: document.querySelector(DOMstrings.inputType).value,
-                description: document.querySelector(DOMstrings.inputDesciption).value,
-           //string to int whit use parseInt
-                value: parseInt(document.querySelector(DOMstrings.inputValue).value)
-           
-            };
+      };
+      return {
+        getInput: function() {
+          return {
+            type: document.querySelector(DOMstrings.inputType).value, // exp, inc
+            description: document.querySelector(DOMstrings.inputDescription).value,
+            value: parseInt(document.querySelector(DOMstrings.inputValue).value)
+          };
         },
 
-        getDOMstrings: function(){
+        getDOMstrings: function() {
             return DOMstrings;
-        },
-        clearFields: function(){
+          },
+     
+        clearFields: function() {
             var fields = document.querySelectorAll(
-                DOMstrings.inputDesciption +', '+ DOMstrings.inputValue
+            DOMstrings.inputDescription + ", " + DOMstrings.inputValue
             );
-            //list to Array
+    
+            // Convert List to Array
             var fieldsArr = Array.prototype.slice.call(fields);
-            // for(var i=0;i<fieldsArr.length; i++)
-            // {
-                //     fieldsArr[i].value = "";
-                // }
-
-            //utga oruulsanii daraa utgiig arilgah
-            fieldsArr.forEach(function(el,index,array){
-                el.value = "";
+    
+            fieldsArr.forEach(function(el, index, array) {
+            el.value = "";
             });
-            //enter darsnii daraa cursor 0-dugaar index aguulj bui(tailbar) heseg deer ochino
+    
             fieldsArr[0].focus();
         },
 
-        tusviigUzuuleh: function(ftusuv){
-            document.querySelector(DOMstrings.tusuvLabel).textContent = ftusuv.tusuv;
-            document.querySelector(DOMstrings.incomeLabel).textContent = "+"+ftusuv.totalInc;
-            document.querySelector(DOMstrings.expeseLabel).textContent = "-"+ftusuv.totalExp;
-            if(ftusuv.huvi === 0){
-                document.querySelector(DOMstrings.percentageLabel).textContent = ftusuv.huvi;
-            }else{
-                document.querySelector(DOMstrings.percentageLabel).textContent = ftusuv.huvi+"%";
+        tusviigUzuuleh: function(tusuv) {
+            document.querySelector(DOMstrings.tusuvLabel).textContent = tusuv.tusuv;
+            document.querySelector(DOMstrings.incomeLabel).textContent =
+              tusuv.totalInc;
+            document.querySelector(DOMstrings.expeseLabel).textContent =
+              tusuv.totalExp;
+      
+            if (tusuv.huvi !== 0) {
+              document.querySelector(DOMstrings.percentageLabel).textContent =
+                tusuv.huvi + "%";
+            } else {
+              document.querySelector(DOMstrings.percentageLabel).textContent =
+                tusuv.huvi;
             }
-        },
+          },
 
+        deleteListItem: function(id) {
+            var el = document.getElementById(id);
+            el.parentNode.removeChild(el);
+          },
+      
         addListItem: function(item, type){
             var html,list;
-            if(type === 'inc'){
+            if (type === "inc") {
                 list = DOMstrings.incomeList;
-                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">$description$$</div><div class="right clearfix"><div class="item__value">$$value$</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-            }else{
+                html =
+                  '<div class="item clearfix" id="inc-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__delete">            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div>        </div></div>';
+              } else {
                 list = DOMstrings.expenseList;
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$$</div><div class="right clearfix"><div class="item__value">$$value$</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-            }
-            html =html.replace("%id%", item.id);
-            html = html.replace("$$value$",item.value);
-            html =html.replace("$description$$",item.description);
-
+                html =
+                  '<div class="item clearfix" id="exp-%id%"><div class="item__description">$$DESCRIPTION$$</div>          <div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn">                <i class="ion-ios-close-outline"></i></button></div></div></div>';
+              }
+              html = html.replace("%id%", item.id);
+              html = html.replace("$$DESCRIPTION$$", item.description);
+              html = html.replace("$$VALUE$$", item.value);
+        
             document.querySelector(list).insertAdjacentHTML("beforeend",html);
         }
     };
@@ -129,21 +136,22 @@ var financeController = (function() {
             }
         },
       
-        deleteItem: function(type, id) {
-            var ids = data.items[type].map(function(e){
-                return e.id;
+        deleteItem: function(types,id) {
+            var ids = data.items[types].map(function(el){
+                return el.id;
             });
-
-            var index = ids.indexof(id);
+            console.log("ids:-->"+ids);
+            var index = ids.indexOf(id);
             console.log('index: '+index);
             if(index !== -1){
                 console.log("ustgah gej baina");
-                data.items[type].splice(index, 1);
+                data.items[types].splice(index, 1);
             }
         },
+        
         addItem: function(type, description, value) {
             var item, id;
-            if(data.items[type].length === 0) {
+            if(data.items   [type].length === 0) {
                 id = 1;
             }
             else{
@@ -203,7 +211,8 @@ var appController = (function(uiController, financeController){
             var arr = id.split("-");
             var type = arr[0];
             var itemId = parseInt(arr[1]);
-            // console.log('itemType: '+ itemType + ' itemId: ' + itemId );
+            console.log(type.length);
+            console.log('itemType: '+ type + ' itemId: ' + itemId );
             financeController.deleteItem(type, itemId);
         };
      });
