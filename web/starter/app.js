@@ -214,17 +214,26 @@ var appController = (function(uiController, financeController){
             console.log(type.length);
             console.log('itemType: '+ type + ' itemId: ' + itemId );
             financeController.deleteItem(type, itemId);
+            
+            uiController.deleteListItem(id);
         };
      });
 
 }
 return {
-    init: function(){
-        serupEventListeners();
-        console.log("started...");
+    init: function() {
+      console.log("Application started...");
+      uiController.tusviigUzuuleh({
+        tusuv: 0,
+        huvi: 0,
+        totalInc: 0,
+        totalExp: 0
+      });
+      serupEventListeners();
     }
-}
+  };
 })(uiController, financeController);
+
 appController.init();
 
 
