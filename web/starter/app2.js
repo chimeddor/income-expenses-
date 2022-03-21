@@ -10,7 +10,13 @@ var uiController = (function() {
     incomeLabel: ".budget__income--value",
     expeseLabel: ".budget__expenses--value",
     percentageLabel: ".budget__expenses--percentage",
-    containerDiv: ".container"
+    containerDiv: ".container",
+    expensePercentageLabel: ".item__percentage"
+  };
+  var nodeListForeach = function(list, callback){
+    for(var i=0; i < list.length; i++){
+      callback(list[i], i);
+    }
   };
 
   return {
@@ -20,6 +26,17 @@ var uiController = (function() {
         description: document.querySelector(DOMstrings.inputDescription).value,
         value: parseInt(document.querySelector(DOMstrings.inputValue).value)
       };
+    },
+
+    displayPercentages: function(allPercentages){
+      var elements = document.querySelectorAll(
+        DOMstrings.expensePercentageLabel
+        );
+
+      //element bolgonii huwid zarlagiin huwiig massivaas awch shiwj oruulah
+      nodeListForeach(elements,function(el, index){
+        el.textContent = allPercentages[index];
+      });
     },
 
     getDOMstrings: function() {
@@ -67,16 +84,16 @@ var uiController = (function() {
       if (type === "inc") {
         list = DOMstrings.incomeList;
         html =
-          '<div class="item clearfix" id="inc-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__delete">            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div>        </div></div>';
+          '<div class="item clearfix" id="inc-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else {
         list = DOMstrings.expenseList;
         html =
-          '<div class="item clearfix" id="exp-%id%"><div class="item__description">$$DESCRIPTION$$</div>          <div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn">                <i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">$$DESCRIPTION$$</div><div class="right clearfix"><div class="item__value">$$VALUE$$</div><div class="item__percentage"></div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
       html = html.replace("%id%", item.id);
       html = html.replace("$$DESCRIPTION$$", item.description);
       html = html.replace("$$VALUE$$", item.value);
-
+      
       document.querySelector(list).insertAdjacentHTML("beforeend", html);
     }
   };
@@ -95,7 +112,19 @@ var financeController = (function() {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
   };
+
+  Expense.prototype.calcPercentage = function(totalIncome){
+    if(totalIncome>0)
+      this.percentage = Math.round((this.value / totalIncome) * 100)
+      else this.percentage = 0;
+  };
+
+  Expense.prototype.getPercentage = function(){
+    return this.percentage + "%";
+  }
+  
 
   var calculateTotal = function(type) {
     var sum = 0;
@@ -121,7 +150,7 @@ var financeController = (function() {
     tusuv: 0,
 
     huvi: 0
-  };
+    };
 
   return {
     tusuvTootsooloh: function() {
@@ -137,6 +166,19 @@ var financeController = (function() {
         data.huvi = Math.round((data.totals.exp / data.totals.inc) * 100);
       }
     },
+
+  calculatePercentages:function(){
+    data.items.exp.forEach(function(el){
+      el.calcPercentage(data.totals.inc);
+    });
+  },
+
+  getPercentages: function(){
+    var allPercentages = data.items.exp.map(function(el){
+      return el.getPercentage();
+    });
+    return allPercentages;
+  },
 
     tusviigAvah: function() {
       return {
@@ -203,11 +245,20 @@ var appController = (function(uiController, financeController) {
   };
 
   var updateTusuv = function(){
+    //4. tusviig tootsoolno
          financeController.tusuvTootsooloh();
-
+    //5. Etssiin vldegdel
          var tusuv = financeController.tusviigAvah();
-   
+   //6. tusviin tootsoog delgetetsend gargana.
          uiController.tusviigUzuuleh(tusuv);
+   //7. elementvvdiin huwiig tootsoolno
+    financeController.calculatePercentages();
+
+   //8. elementvvdiin huwiig hvleej awna
+    var allPercentages = financeController.getPercentages();
+   //9. edgeer huwiig delgetsend gargana.
+   uiController.displayPercentages(allPercentages);
+
   };
 
   var setupEventListeners = function() {
