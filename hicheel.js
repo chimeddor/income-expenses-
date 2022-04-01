@@ -120,14 +120,82 @@
 // for(i in mike){
 // 	console.log(mike[i])
 // }
+// ***************** Array push(), pop() **************
+// let days = ["월","화","수요"]
+// console.log(days);
+// days.push("목");
+// days.push("금");
+// console.log(days);
+// days.pop();
+// console.log(days);
 
+// ********************* for of and for ****************
+// let month = ["july","ap","aug","dec","sep"];
+// for(index = 0; index < month.length; index++){
+// 	console.log(`for, ${month[index]}`);
+// } 
+// console.log(" ")
+// for(let mont of month){
+// 	console.log(`for of, ${mont}`);
+// }
+//  ******************* toUpperCase and toLowerCase **********************
+// let desc = "Hi guys. Nice to meet you.";
+// console.log(desc);
+// let toUpperCase = desc.toUpperCase();
+// console.log(toUpperCase);
 
+// let toLowerCase = desc.toLowerCase();
+// console.log(toLowerCase);
 
+let text = "Hi guys. Nice to meet you.";
+// console.log(text.indexOf('meet'));
 
+if(text.indexOf('Hi') > -1){
+	console.log("Ugvvlbert Hi bagtsan bna");
+};
 
+// **** slice(n,m); n=start, m=end ***********
 
+console.log(text.slice(3,18));
 
+//  *********** subtring(n,m) n =start/end, m=start/end
 
+console.log(" ");
+console.log(`substring, ${text.substring(4,10)}`);
+console.log(`substring, ${text.substring(10,4)}`);
+
+// ************************ substr(n,m) n=start m=shirheg *******************
+console.log(`substr--->, ${text.substr(4,2)}`);
+console.log(`substr--->, ${text.substr(4,3)}`);
+// ************************* trim() urd ard taliin hooson zaig baihgvi bolgono ***********
+let trim = "  hello my world  ";
+console.log(`before trim --->,  ${trim.length}`);
+console.log(`before trim --->, ${trim.slice(0,3)}`);
+let afterTrim = trim.trim();
+console.log(`after trim --->, ${afterTrim.slice(0,3)}`);
+
+// ***************************** repeat(n) 문자열을 n번 반복 *******************************
+let hello = "hello!";
+console.log(` `)
+console.log(hello.repeat(3));
+
+//*********************** 문제열 비교***********************
+console.log("a".codePointAt(0));
+console.log(String.fromCodePoint(97));
+
+let list = [
+	"01. 들어가며",
+	"02. JS의 역사",
+	"03. 자료형",
+	"04. 함수",
+	"05. 배열",
+];
+let saveList = [];
+
+for(let i = 0; i < list.length; i++){
+	saveList.push(list[i].slice(4));	
+}
+console.log(saveList);
 
 
 
